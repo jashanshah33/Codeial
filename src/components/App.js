@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
-import { getPosts } from '../api';
+
 import { Home, LogIn } from '../pages';
 import { Loader, Navbar } from './';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { useAuth } from '../hooks';
+
 
 const About = () => {
   return <h1>About</h1>;
@@ -15,24 +16,11 @@ const Page404 = () => {
 };
 
 function App() {
-  const [posts, setPosts] = useState([]);
-  const [loader, setLoader] = useState(true);
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      const response = await getPosts();
+  const auth  = useAuth()
+ 
 
-      if (response.success) {
-        setPosts(response.data.posts);
-      }
-
-      setLoader(false);
-    };
-
-    fetchPosts();
-  }, []);
-
-  if (loader) {
+  if (auth.loading) {
     return <Loader />;
   }
 
@@ -42,7 +30,7 @@ function App() {
         <Navbar />
         <Switch>
           <Route exact path="/">
-            <Home posts={posts} />
+            <Home />
           </Route>
           <Route exact path="/login">
             <LogIn />
