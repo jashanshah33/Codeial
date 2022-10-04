@@ -1,25 +1,39 @@
-
 import { Home, LogIn } from '../pages';
 import { Loader, Navbar } from './';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Redirect,
+  Route,
+  Switch,
+} from 'react-router-dom';
 import { useAuth } from '../hooks';
+import SignUp from '../pages/SignUp';
+import Setting from '../pages/Setting';
+import UserProfile from '../pages/userProfile';
 
+function PrivateRoute({ children, ...rest }) {
+  const auth = useAuth();
 
-const About = () => {
-  return <h1>About</h1>;
-};
-const UserInfo = () => {
-  return <h1>UserInfo</h1>;
-};
+  return (
+    <Route
+      {...rest}
+      render={() => {
+        if (auth.user) {
+          return children;
+        }
+        return <Redirect to={'/login'} />;
+      }}
+    />
+  );
+}
+
 const Page404 = () => {
   return <h1>Error 404</h1>;
 };
 
 function App() {
-
-  const auth  = useAuth()
- 
-
+  const auth = useAuth();
+  console.log('Auth', auth);
   if (auth.loading) {
     return <Loader />;
   }
@@ -32,15 +46,18 @@ function App() {
           <Route exact path="/">
             <Home />
           </Route>
+          <PrivateRoute exact path="/setting">
+            <Setting />
+          </PrivateRoute>
           <Route exact path="/login">
             <LogIn />
           </Route>
-          <Route exact path="/about">
-            <About />
+          <Route exact path="/signup">
+            <SignUp />
           </Route>
-          <Route exact path="/userinfo/shah">
-            <UserInfo />
-          </Route>
+          <PrivateRoute exact path="/user/:userId">
+            <UserProfile />
+          </PrivateRoute>
           <Route>
             <Page404 />
           </Route>

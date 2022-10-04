@@ -16,14 +16,14 @@ const Navbar = () => {
       </div>
    <div className={styles.rightNav}>
    {auth.user &&   <div className={styles.user}>
-          <a href="/">
+          <Link to="/setting">
             <img
               src="https://cdn-icons-png.flaticon.com/512/1077/1077114.png"
               alt=""
               className={styles.userDp}
             />
             
-          </a>
+          </Link>
           <span>{auth.user.name}</span>
         </div> }
 
@@ -39,7 +39,7 @@ const Navbar = () => {
               <Link to="/login">Log in</Link>
             </li>
             <li>
-              <a href="/">Register</a>
+              <Link to="/signup">Register</Link>
             </li>
             </>}
            

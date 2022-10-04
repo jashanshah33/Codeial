@@ -6,6 +6,9 @@ const initrialState = {
   login: () => {},
   logout: () => {},
   loading: true,
+  signup: () => {},
+  updateUser: () => {},
+  updateUserFriends: () => {}
 };
 
 export const AuthContext = createContext(initrialState);

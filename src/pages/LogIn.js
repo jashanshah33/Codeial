@@ -3,6 +3,7 @@ import { useToasts } from 'react-toast-notifications';
 import styles from '../styles/login.module.css';
 // import { login } from '../api';
 import { useAuth } from '../hooks';
+import { Redirect } from 'react-router-dom';
 
 const useFormInfo = (initialValue) => {
   const [value, setValue] = useState(initialValue);
@@ -24,7 +25,7 @@ const LogIn = () => {
   const { addToast } = useToasts();
 
   const auth = useAuth();
-  console.log(auth);
+  // console.log(auth);
 
   const formSubmit = async (e) => {
     e.preventDefault();
@@ -54,6 +55,12 @@ const LogIn = () => {
 
     setLogedIn(false);
   };
+
+  // const auth = useAuth();
+
+  if (auth.user) {
+    return <Redirect to="/" />;
+  }
 
   return (
     <form className={styles.loginForm} onSubmit={formSubmit}>

@@ -4,6 +4,7 @@ import Comment from '../components/Comment';
 import { useEffect, useState } from 'react';
 import { getPosts } from '../api';
 import { Loader } from '../components';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
@@ -22,9 +23,9 @@ const Home = () => {
 
     fetchPosts();
   }, []);
-  
+
   if (loader) {
-    return <Loader/>
+    return <Loader />;
   }
   return (
     <div className={styles.postsList}>
@@ -37,7 +38,18 @@ const Home = () => {
                 alt="user-pic"
               />
               <div>
-                <span className={styles.postAuthor}>{post.user.name}</span>
+                <Link
+                  to={{
+                    pathname: `/user/${post.user._id}`,
+                    state: {
+                      user: post.user,
+                    },
+                  }}
+                  className={styles.postAuthor}
+                >
+                  {post.user.name}
+                </Link>
+
                 <span className={styles.postTime}>a minute ago</span>
               </div>
             </div>
@@ -65,9 +77,8 @@ const Home = () => {
             </div>
 
             <div className={styles.postCommentsList}>
-            {post.comments.map((comment) => (
-              // console.log(comment)
-                <Comment comment={comment} />
+              {post.comments.map((comment) => (
+                <Comment comment={comment} key={`comment${comment._id}`} />
               ))}
             </div>
           </div>
