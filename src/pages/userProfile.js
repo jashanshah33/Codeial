@@ -1,7 +1,7 @@
 import styles from '../styles/setting.module.css';
 import { useEffect, useState } from 'react';
 import { useToasts } from 'react-toast-notifications';
-import { useHistory, useLocation, useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { addFriend, fetchUserProfile, removeFriend } from '../api';
 import { Loader } from '../components';
 import { useAuth } from '../hooks';
@@ -62,7 +62,9 @@ const UserProfile = () => {
     const response = await removeFriend(userId);
 
     if (response.success) {
-      const friendship = auth.user.friends.filter( (friend) => friend.to_user._id !== userId)
+      const friendship = auth.user.friends.filter(
+        (friend) => friend.to_user._id === userId
+      );
 
       auth.updateUserFriends(false, friendship[0]);
       addToast('Friend remove successfully!', {
@@ -74,8 +76,6 @@ const UserProfile = () => {
       });
     }
     setRequestInProgress(false);
-
-
   };
 
   const handleAddFriendClick = async () => {
@@ -118,7 +118,7 @@ const UserProfile = () => {
       </div>
 
       <div className={styles.btnGrp}>
-      {checkIfUserIsAFriend() ? (
+        {checkIfUserIsAFriend() ? (
           <button
             className={`button ${styles.saveBtn}`}
             onClick={handleRemoveClick}

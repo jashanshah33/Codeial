@@ -1,19 +1,23 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import './styles/index.css';
 import { App } from './components';
 import { ToastProvider } from 'react-toast-notifications';
-import { AuthProvider } from './providers/AuthProvider';
+import { AuthProvider, PostProvider } from './providers';
 
-ReactDOM.render(
+const root = createRoot(  document.getElementById('root'))
+
+root.render(
   <ToastProvider
     autoDismiss={true}
     autoDismissTimeout={5000}
     placement="top-right"
   >
     <AuthProvider>
-      <App />
+      <PostProvider>
+        <App />
+      </PostProvider>
     </AuthProvider>
   </ToastProvider>,
-  document.getElementById('root')
+
 );

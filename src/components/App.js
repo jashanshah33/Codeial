@@ -33,7 +33,7 @@ const Page404 = () => {
 
 function App() {
   const auth = useAuth();
-  console.log('Auth', auth);
+  // console.log('Auth', auth);
   if (auth.loading) {
     return <Loader />;
   }

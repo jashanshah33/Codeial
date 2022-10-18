@@ -1,8 +1,10 @@
 import { useState, useContext, useEffect } from 'react';
-import { AuthContext } from '../providers/AuthProvider';
+import { AuthContext } from '../providers';
+import { PostContext } from '../providers';
 import {
   editProfile,
   fetchUserFriends,
+  getPosts,
   login as userLogin,
   register,
 } from '../api';
@@ -47,16 +49,47 @@ export const useProvideAuth = () => {
     getUser();
   }, []);
 
+  // const login = async (email, password) => {
+  //   const response = await userLogin(email, password);
+
+  //   if (response.success) {
+  //     // setUser(response.data);
+  //     setUser(response.data.user);
+  //     setItemInLocalStorage(
+  //       LOCALSTORAGE_TOKEN_KEY,
+  //       response.data.token ? response.data.token : null
+  //     );
+  //     return {
+  //       success: true,
+  //     };
+  //   } else {
+  //     return {
+  //       success: false,
+  //       message: response.message,
+  //     };
+  //   }
+  // };
+
   const login = async (email, password) => {
     const response = await userLogin(email, password);
 
     if (response.success) {
       // setUser(response.data);
-      setUser(response.data.user);
       setItemInLocalStorage(
         LOCALSTORAGE_TOKEN_KEY,
         response.data.token ? response.data.token : null
       );
+      const response2 = await fetchUserFriends();
+
+      let friends = [];
+
+      if (response2.success) {
+        friends = response2.data.friends;
+      }
+
+      response.data.user.friends = friends;
+      setUser(response.data.user);
+
       return {
         success: true,
       };
@@ -133,5 +166,49 @@ export const useProvideAuth = () => {
     loading,
     updateUser,
     updateUserFriends,
+  };
+};
+
+export const usePosts = () => {
+  return useContext(PostContext);
+};
+
+export const useProvidePosts = () => {
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      const response = await getPosts();
+
+      if (response.success) {
+        setPosts(response.data.posts);
+      }
+
+      setLoading(false);
+    };
+
+    fetchPosts();
+  }, []);
+
+  const addPostToState = (post) => {
+    const newPosts = [post, ...posts];
+    setPosts(newPosts);
+  };
+
+  const addComment = (comment, postId) => {
+    const newPost = posts.map((post) => {
+      if (post._id === postId) {
+        return { ...post, comments: [...post.comments, comment] };
+      }
+      return post;
+    });
+    setPosts(newPost);
+  };
+  return {
+    data: posts,
+    loading,
+    addPostToState,
+    addComment,
   };
 };
