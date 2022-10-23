@@ -44,7 +44,7 @@ function App() {
         <Navbar />
         <Switch>
           <Route exact path="/">
-            <Home />
+            {auth.user ? <Home /> : <LogIn />}
           </Route>
           <PrivateRoute exact path="/setting">
             <Setting />

@@ -15,7 +15,7 @@ const Posts = ({ post }) => {
   const { addToast } = useToasts();
 
   const keyPress = async (e) => {
-    if (e.keyCode == 13) {
+    if (e.keyCode === 13) {
       setCreatingComment(true);
       const response = await createComments(comment, post._id);
       if (response.success) {
